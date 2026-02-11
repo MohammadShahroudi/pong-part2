@@ -1,5 +1,10 @@
 using UnityEngine;
 using UnityEngine.Audio;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine.UI;
+using UnityEngine.InputSystem;
+using TMPro;
 
 
 /*
@@ -23,6 +28,10 @@ public class GameManager : MonoBehaviour
 
     const int scoreToWin = 11;
 
+    public TextMeshProUGUI countText;
+
+    public GameObject winTextObject;
+
     void Start()
     {
         ballStartPos = ball.position;
@@ -33,6 +42,7 @@ public class GameManager : MonoBehaviour
     public void OnGoalTrigger(GoalTrigger trigger)
     {
         // If the ball entered a goal area, increment the score, check for win, and reset the ball
+        // countText.text = "Score: " + leftPlayerScore.ToString() + rightPlayerScore.ToString(); 
 
         if (trigger == leftGoalTrigger)
         {
@@ -55,6 +65,11 @@ public class GameManager : MonoBehaviour
                 ResetBall(1f);
         }
     }
+
+    // private void OnTriggerEnter(Collider other)
+    // {
+        
+    // }
 
     void ResetBall(float directionSign)
     {
