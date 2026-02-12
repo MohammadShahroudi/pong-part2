@@ -18,6 +18,8 @@ using TMPro;
 public class GameManager : MonoBehaviour
 {
     public Transform ball;
+    public TextMeshProUGUI scoreText;
+
     public float startSpeed = 3f;
     public GoalTrigger leftGoalTrigger;
     public GoalTrigger rightGoalTrigger;
@@ -31,6 +33,8 @@ public class GameManager : MonoBehaviour
     public TextMeshProUGUI countText;
 
     public GameObject winTextObject;
+
+    //public TMP_Text textComponent;
 
     void Start()
     {
@@ -48,6 +52,7 @@ public class GameManager : MonoBehaviour
         {
             rightPlayerScore++;
             Debug.Log($"Right player scored: {rightPlayerScore}");
+            // scoreText.text = "Test right score!";
 
             if (rightPlayerScore == scoreToWin)
                 Debug.Log("Right player wins!");
@@ -58,18 +63,18 @@ public class GameManager : MonoBehaviour
         {
             leftPlayerScore++;
             Debug.Log($"Left player scored: {leftPlayerScore}");
+            // scoreText.text = "Test left score!";
 
             if (leftPlayerScore == scoreToWin)
                 Debug.Log("Left player wins!");
             else
                 ResetBall(1f);
         }
+        
+        scoreText.color = Color.red;
+        scoreText.text = $"Score: {leftPlayerScore} - {rightPlayerScore}";
     }
 
-    // private void OnTriggerEnter(Collider other)
-    // {
-        
-    // }
 
     void ResetBall(float directionSign)
     {

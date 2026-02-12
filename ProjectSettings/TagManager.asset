@@ -9,6 +9,8 @@ TagManager:
   - rightPaddle
   - blueCube
   - redCube
+  - leftGoal
+  - rightGoal
   layers:
   - Default
   - TransparentFX

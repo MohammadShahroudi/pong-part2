@@ -11,9 +11,13 @@ using TMPro;
  * Mo
  */
 
-
+[RequireComponent(typeof(AudioSource))]
 public class Paddle : MonoBehaviour
 {
+    public AudioClip paddleCollision;
+    public AudioClip ballSpeedChange;
+    AudioSource audioSource;
+
     public float maxTravelHeight;
     public float minTravelHeight;
     public float speed;
@@ -40,7 +44,12 @@ public class Paddle : MonoBehaviour
         transform.position = newPosition;
     }
 
-    void OnCollisionEnter(Collision other)
+    void Awake()
+    {
+       audioSource = GetComponent<AudioSource>();
+    }
+
+    void OnCollisionEnter(Collision collision)
     {
         // Get world-space bounds
         var paddleBounds = GetComponent<BoxCollider>().bounds;
@@ -48,7 +57,7 @@ public class Paddle : MonoBehaviour
         float paddleCenterZ = paddleBounds.center.z;
         float paddleHalfHeight = paddleBounds.extents.z;
         
-        float hitZ = other.GetContact(0).point.z;
+        float hitZ = collision.GetContact(0).point.z;
 
         // Get a parameterized value roughly in the -1 to 1 range for where the ball hits
         float normalizedHit = (hitZ - paddleCenterZ) / paddleHalfHeight;
@@ -57,7 +66,7 @@ public class Paddle : MonoBehaviour
         float bounceDirection = Mathf.Clamp(normalizedHit, -1f, 1f);
 
         // Ideally we would use linearVelocity here.  Unfortunately, it is 0-length during the collision
-        Vector3 currentVelocity = other.relativeVelocity;
+        Vector3 currentVelocity = collision.relativeVelocity;
 
         // The flipped sign will change the velocity direction appropriately for both paddles
         float newSign = -Mathf.Sign(currentVelocity.x);
@@ -65,10 +74,11 @@ public class Paddle : MonoBehaviour
         // Change the velocity between -60 to 60 degrees based on where it hit the paddle
         float newSpeed = currentVelocity.magnitude * collisionBallSpeedUp;
         float newAngle = 60f * bounceDirection * Mathf.Deg2Rad;
+        audioSource.PlayOneShot(ballSpeedChange);
         
         // Calculate new velocity vector - using trig and scaled by new speed
         Vector3 newVelocity = new Vector3(newSign * Mathf.Cos(newAngle), 0f, Mathf.Sin(newAngle)) * newSpeed;
-        other.rigidbody.linearVelocity = newVelocity;
+        collision.rigidbody.linearVelocity = newVelocity;
 
         // Debug.DrawRay(other.transform.position, newVelocity, Color.yellow);
         // Debug.Break();
